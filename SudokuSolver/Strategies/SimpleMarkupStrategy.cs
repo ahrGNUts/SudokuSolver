@@ -26,13 +26,12 @@ namespace SudokuSolver.Strategies
                         sudokuBoard[row, col] = GetPossibilityIntersection(possibilitiesInRowAndCol, possibilitiesInBlock);
                     }
                 }
-                
             }
 
             return sudokuBoard;
         }
 
-        private object GetPossibilitiesInRowAndCol(int[,] sudokuBoard, int givenRow, int givenCol)
+        private int GetPossibilitiesInRowAndCol(int[,] sudokuBoard, int givenRow, int givenCol)
         {
             int[] possibilities = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
@@ -47,14 +46,33 @@ namespace SudokuSolver.Strategies
             return Convert.ToInt32(String.Join(string.Empty, possibilities.Select(p => p).Where(p => p != 0)));
         }
 
-        private object GetPossibilitiesInBlock(int[,] sudokuBoard, int givenRow, int givenCol)
+        private int GetPossibilitiesInBlock(int[,] sudokuBoard, int givenRow, int givenCol)
         {
-            throw new NotImplementedException();
+            int[] possibilities = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var sudokuMap = _sudokuMapper.Find(givenRow, givenCol);
+
+            for (int row = sudokuMap.StartRow; row < sudokuMap.StartRow + 2; row++)
+            {
+                for (int col = sudokuMap.StartCol; col < sudokuMap.StartCol + 2; col++)
+                {
+                    if (sudokuBoard[row, col] == 0 || sudokuBoard[row, col].ToString().Length > 1)
+                    {
+                        if (IsValidSingle(sudokuBoard[row, col]))
+                            possibilities[sudokuBoard[row, col] - 1] = 0;
+                    }
+                }
+            }
+
+            return Convert.ToInt32(String.Join(string.Empty, possibilities.Select(p => p).Where(p => p != 0)));
         }
 
-        private int GetPossibilityIntersection(object possibilitiesInRowAndCol, object possibilitiesInBlock)
+        private int GetPossibilityIntersection(int possibilitiesInRowAndCol, int possibilitiesInBlock)
         {
-            throw new NotImplementedException();
+            var possibilitiesInRowAndColCharArray = possibilitiesInRowAndCol.ToString().ToCharArray();
+            var possibilitiesInBlockCharArray = possibilitiesInBlock.ToString().ToCharArray();
+            var possibilitiesSubset = possibilitiesInRowAndColCharArray.Intersect(possibilitiesInBlockCharArray);
+
+            return Convert.ToInt32(string.Join(string.Empty, possibilitiesSubset));
         }
 
         private bool IsValidSingle(int cellDigit)
