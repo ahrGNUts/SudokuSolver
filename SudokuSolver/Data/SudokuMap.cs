@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SudokuSolver.Data
+﻿namespace SudokuSolver.Data
 {
     public class SudokuMap
     {
