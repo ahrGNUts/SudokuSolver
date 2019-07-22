@@ -51,9 +51,9 @@ namespace SudokuSolver.Strategies
             int[] possibilities = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             var sudokuMap = _sudokuMapper.Find(givenRow, givenCol);
 
-            for (int row = sudokuMap.StartRow; row < sudokuMap.StartRow + 2; row++)
+            for (int row = sudokuMap.StartRow; row <= sudokuMap.StartRow + 2; row++)
             {
-                for (int col = sudokuMap.StartCol; col < sudokuMap.StartCol + 2; col++)
+                for (int col = sudokuMap.StartCol; col <= sudokuMap.StartCol + 2; col++)
                 {
                     if (sudokuBoard[row, col] == 0 || sudokuBoard[row, col].ToString().Length > 1)
                     {
