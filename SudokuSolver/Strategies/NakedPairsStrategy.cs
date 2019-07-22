@@ -1,5 +1,5 @@
-﻿using System;
-using SudokuSolver.Workers;
+﻿using SudokuSolver.Workers;
+using System;
 
 namespace SudokuSolver.Strategies
 {
@@ -7,7 +7,7 @@ namespace SudokuSolver.Strategies
     {
         private readonly SudokuMapper _sudokuMapper;
 
-        NakedPairsStrategy(SudokuMapper sudokuMapper)
+        public NakedPairsStrategy(SudokuMapper sudokuMapper)
         {
             _sudokuMapper = sudokuMapper;
         }
@@ -18,33 +18,25 @@ namespace SudokuSolver.Strategies
             {
                 for (int col = 0; col < sudokuBoard.GetLength(1); col++)
                 {
-                    EliminateNakedPairsFromOthersInRow(sudokuBoard, row, col);
-                    EliminateNakedPairsFromOthersInCol(sudokuBoard, row, col);
-                    EliminateNakedPairsFromOthersInBlock(sudokuBoard, row, col);
+                    EliminateNakedPairFromOthersInRow(sudokuBoard, row, col);
+                    EliminateNakedPairFromOthersInCol(sudokuBoard, row, col);
+                    EliminateNakedPairFromOthersInBlock(sudokuBoard, row, col);
                 }
             }
+
+            return sudokuBoard;
         }
 
-        private void EliminateNakedPairsFromOthersInRow(int[,] sudokuBoard, int givenRow, int givenCol)
+        private void EliminateNakedPairFromOthersInRow(int[,] sudokuBoard, int givenRow, int givenCol)
         {
             if (!HasNakedPairInRow(sudokuBoard, givenRow, givenCol)) return;
 
             for (int col = 0; col < sudokuBoard.GetLength(1); col++)
             {
-                if(sudokuBoard[givenRow, col] != sudokuBoard[givenRow, givenCol] && sudokuBoard[givenRow, col].ToString().Length > 1)
+                if (sudokuBoard[givenRow, col] != sudokuBoard[givenRow, givenCol] && sudokuBoard[givenRow, col].ToString().Length > 1)
                 {
                     EliminateNakedPair(sudokuBoard, sudokuBoard[givenRow, givenCol], givenRow, col);
                 }
-            }
-        }
-
-        private void EliminateNakedPair(int[,] sudokuBoard, int valuesToEliminate, int eliminateFromRow, int eliminateFromCol)
-        {
-            var valuesToEliminateArray = valuesToEliminate.ToString().ToCharArray();
-
-            foreach(var valueToEliminate in valuesToEliminateArray)
-            {
-                sudokuBoard[eliminateFromRow, eliminateFromCol] = Convert.ToInt32(sudokuBoard[eliminateFromRow, eliminateFromCol].ToString().Replace(valueToEliminate.ToString(), string.Empty));
             }
         }
 
@@ -58,7 +50,7 @@ namespace SudokuSolver.Strategies
             return false;
         }
 
-        private void EliminateNakedPairsFromOthersInCol(int[,] sudokuBoard, int givenRow, int givenCol)
+        private void EliminateNakedPairFromOthersInCol(int[,] sudokuBoard, int givenRow, int givenCol)
         {
             if (!HasNakedPairInCol(sudokuBoard, givenRow, givenCol)) return;
 
@@ -81,7 +73,7 @@ namespace SudokuSolver.Strategies
             return false;
         }
 
-        private void EliminateNakedPairsFromOthersInBlock(int[,] sudokuBoard, int givenRow, int givenCol)
+        private void EliminateNakedPairFromOthersInBlock(int[,] sudokuBoard, int givenRow, int givenCol)
         {
             if (!HasNakedPairInBlock(sudokuBoard, givenRow, givenCol)) return;
 
@@ -91,10 +83,10 @@ namespace SudokuSolver.Strategies
             {
                 for (int col = sudokuMap.StartCol; col <= sudokuMap.StartCol + 2; col++)
                 {
-                    if(sudokuBoard[row, col].ToString().Length > 1 && sudokuBoard[row, col] != sudokuBoard[givenRow, givenCol])
+                    if (sudokuBoard[row, col].ToString().Length > 1 && sudokuBoard[row, col] != sudokuBoard[givenRow, givenCol])
                     {
-                        EliminateNakedPair(sudokuBoard, sudokuBoard[givenRow, givenCol], givenRow, givenCol);
-                    } 
+                        EliminateNakedPair(sudokuBoard, sudokuBoard[givenRow, givenCol], row, col);
+                    }
                 }
             }
         }
@@ -112,14 +104,22 @@ namespace SudokuSolver.Strategies
                     if (!elementSame && elementInSameBlock && IsNakedPair(sudokuBoard[givenRow, givenCol], sudokuBoard[row, col])) return true;
                 }
             }
+
             return false;
+        }
+
+        private void EliminateNakedPair(int[,] sudokuBoard, int valuesToEliminate, int eliminateFromRow, int eliminateFromCol)
+        {
+            var valuesToEliminateArray = valuesToEliminate.ToString().ToCharArray();
+            foreach (var valueToEliminate in valuesToEliminateArray)
+            {
+                sudokuBoard[eliminateFromRow, eliminateFromCol] = Convert.ToInt32(sudokuBoard[eliminateFromRow, eliminateFromCol].ToString().Replace(valueToEliminate.ToString(), string.Empty));
+            }
         }
 
         private bool IsNakedPair(int firstPair, int secondPair)
         {
             return firstPair.ToString().Length == 2 && firstPair == secondPair;
         }
-
     }
 }
-

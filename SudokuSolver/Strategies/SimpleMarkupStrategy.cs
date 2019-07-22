@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SudokuSolver.Strategies
 {
-    class SimpleMarkupStrategy : ISudokuStrategy
+    public class SimpleMarkupStrategy : ISudokuStrategy
     {
         private readonly SudokuMapper _sudokuMapper;
 
