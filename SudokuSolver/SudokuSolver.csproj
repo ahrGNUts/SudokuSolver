@@ -46,6 +46,7 @@
     <Compile Include="Data\SudokuMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strategies\NakedPairsStrategy.cs" />
     <Compile Include="Strategies\SimpleMarkupStrategy.cs" />
     <Compile Include="Strategies\SudokuSolverEngine.cs" />
     <Compile Include="Strategies\ISudokuStrategy.cs" />
